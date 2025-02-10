@@ -21,10 +21,14 @@ const breweries = [
   }
 ];
 
+const searchButton = document.querySelector("#search-button");
+
+searchButton.addEventListener("click", onClickSearch());
+
 // breweries-list
 
-//function drawList(breweries)
-//{
+function drawList(breweries)
+{
   const brewList = document.querySelector(".breweries-list");
 
   for(let x = 0; x < breweries.length; x++)//(let brew in breweries)
@@ -93,7 +97,39 @@ const breweries = [
 
     brewList.append(brewery);
   }
-//}
 
+  //https://api.openbrewerydb.org/breweries?by_state=[state]
+
+  }
+
+function fetchBreweriesByState(state){
+  fetch(`https://api.openbrewerydb.org/v1/breweries?by_state=${state}&per_page=3`)
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log('Data received:', data);
+    drawList(data);
+  })
+  .catch(error => {
+    console.error('There was a problem with the fetch operation:', error);
+  });
+}
+
+//fetchBreweriesByState("texas");
 //drawList(breweries);
 
+function onClickSearch()
+{
+  const searchBar = document.querySelector("#select-state");
+
+  console.log("MY NAME IS");
+  //const searchButton = document.querySelector("#search-button");
+
+  const text = searchBar.innerText;
+
+  fetchBreweriesByState(text);
+}
